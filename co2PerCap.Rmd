@@ -37,17 +37,21 @@ my_tab %>%
 ***
 ### Questions:
 
-1. Are the data in a flat file format? 
+1. Are the data in a flat file format? NO
 
-2. What is the structure of the data?  Are there any variables you might need to convert prior to manipulating the data?
+2. What is the structure of the data? Data.Frame 
+Are there any variables you might need to convert prior to manipulating the data? Yes
 
 3. What countries had per capita emissions larger than the 95th percentile in 2014? Make a table of their names and per capita emissions. Hint: Use quantile() to find the 95% cutoff.
 
 Your table should look something like this:
 ```{r, echo=FALSE}
+q_2014 <- quantile(data$X2014, 0.95)
+new_data <- data[data$X2014 > q_2014,]
+
 cntrys <- rep("country", 5)
 dat <- rep("NA", 5)
-ex_tab <- data.frame("Country"=dat, "PerCapEmissions 2014"=dat)
+ex_tab <- data.frame("Country"=new_data$country, "PerCapEmissions 2014"=new_data$x2014)
 ex_tab %>%
   kable() %>%
   kable_styling()
@@ -56,9 +60,14 @@ ex_tab %>%
 4. Make a table comparing the per capita emissions of the US and the world's highest per capita emitter (from above)  in 1925, 1950, and 2014.  
 
 Your finished product might look something like this:
+
 ```{r, echo=FALSE}
+my_var <- c("Qatar", "United States")
+top_data <- data[data$country==my_var,c("country","X1925","X1950","X2014")]
+top_data <- as.data.frame(t(top_data))
+
 dat <- rep("NA", 3)
-ex_tab <- data.frame("TopCountry"=dat, "United States"=dat)
+ex_tab <- data.frame("TopCountry"=top_data$`139`[-1], "United States"=top_data$`184`[-1])
 row.names(ex_tab) <- c("1925", "1950", "2014")
 ex_tab %>%
   kable() %>%
